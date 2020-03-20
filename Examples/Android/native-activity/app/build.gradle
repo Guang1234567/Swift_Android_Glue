@@ -1,0 +1,93 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.readdle.android.swift'
+
+swift {
+    // helpers to forward flags from Swift Package Manager to Swift Compiler Frontend
+    //def passToFrontend = ["-Xswiftc", "-Xfrontend", "-Xswiftc"]
+    //def disableObjcAttr = passToFrontend + "-experimental-disable-objc-attr"
+
+    // Enables swift clean when ./gradlew clean invoked. Default true
+    cleanEnabled false
+
+    // Custom swift flags for debug build
+    debug {
+        extraBuildFlags "-Xswiftc", "-DDEBUG"
+        // Enable symbols
+        extraBuildFlags "-Xswiftc", "-g"
+        // Disable @objc and dynamic
+        //extraBuildFlags disableObjcAttr
+        // Enable build verbose
+        //extraBuildFlags("-Xswiftc", "-v")
+
+        //extraBuildFlags "-Xswiftc", "-emit-library"
+        //extraBuildFlags "-Xcc", "-fvisibility=default"
+
+        //extraBuildFlags "-Xlinker", "-u"
+        //extraBuildFlags "-Xlinker", "ANativeActivity_onCreate"
+    }
+
+    // Custom swift flags for release build
+    release {
+        // Enable symbols in relase mode
+        extraBuildFlags "-Xswiftc", "-g"
+        // Disable @objc and dynamic
+        //extraBuildFlags disableObjcAttr
+    }
+}
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        applicationId = 'com.example.native_activity'
+        minSdkVersion 14
+        targetSdkVersion 28
+        /*
+        externalNativeBuild {
+            cmake {
+                arguments '-DANDROID_STL=c++_static'
+            }
+        }
+        */
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                    'proguard-rules.pro'
+
+            packagingOptions {
+                doNotStrip "**/*.so"
+            }
+        }
+
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                    'proguard-rules.pro'
+        }
+    }
+    /*
+    externalNativeBuild {
+        cmake {
+            version '3.10.2'
+            path 'src/main/cpp/CMakeLists.txt'
+        }
+    }
+    */
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Swift dependencies
+    annotationProcessor "com.readdle.swift.java.codegen:compiler:0.7.0"
+    implementation "com.readdle.swift.java.codegen:annotations:0.7.0"
+
+    // App dependencies
+    implementation "com.android.support:appcompat-v7:28.+"
+    implementation "com.android.support:cardview-v7:28.+"
+    implementation "com.android.support:design:28.+"
+    implementation "com.android.support:recyclerview-v7:28.+"
+    implementation "com.android.support:support-v4:28.+"
+}

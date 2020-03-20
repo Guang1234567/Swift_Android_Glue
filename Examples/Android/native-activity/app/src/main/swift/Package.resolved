@@ -1,0 +1,79 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "CJavaVM",
+        "repositoryURL": "https://github.com/readdle/CJavaVM.git",
+        "state": {
+          "branch": null,
+          "revision": "e4b172f024fffb30a157a9105390408f03a6de5f",
+          "version": "2.4.1"
+        }
+      },
+      {
+        "package": "java_swift",
+        "repositoryURL": "https://github.com/readdle/java_swift.git",
+        "state": {
+          "branch": null,
+          "revision": "30860b7664e0cffd11dbd15bc5e70952896207a2",
+          "version": "2.1.9"
+        }
+      },
+      {
+        "package": "AndroidSwiftLogcat",
+        "repositoryURL": "https://github.com/Guang1234567/swift-android-logcat.git",
+        "state": {
+          "branch": "master",
+          "revision": "49ee7e59cfbe3c3c5d469882395beecada4fe381",
+          "version": null
+        }
+      },
+      {
+        "package": "AndroidSwiftTrace",
+        "repositoryURL": "https://github.com/Guang1234567/swift-android-trace.git",
+        "state": {
+          "branch": "master",
+          "revision": "cc6162f729be1f18055ffdf903d84ec411cbc572",
+          "version": null
+        }
+      },
+      {
+        "package": "AnyCodable",
+        "repositoryURL": "https://github.com/readdle/swift-anycodable.git",
+        "state": {
+          "branch": null,
+          "revision": "9163d43ad317d938629592bbae798a95a3a0a4cf",
+          "version": "1.0.3"
+        }
+      },
+      {
+        "package": "swift-backtrace",
+        "repositoryURL": "https://github.com/Guang1234567/swift-backtrace.git",
+        "state": {
+          "branch": "master",
+          "revision": "6972557b88aeb28c87c440112c1b447bf75db5c7",
+          "version": null
+        }
+      },
+      {
+        "package": "Java",
+        "repositoryURL": "https://github.com/readdle/swift-java.git",
+        "state": {
+          "branch": null,
+          "revision": "38459fc901d2ecd9655994459a6f099537a2cb98",
+          "version": "0.2.4"
+        }
+      },
+      {
+        "package": "JavaCoder",
+        "repositoryURL": "https://github.com/readdle/swift-java-coder.git",
+        "state": {
+          "branch": null,
+          "revision": "065a7d03a5a77637ea5fc64ead050bbb93a9f8c3",
+          "version": "1.0.17"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

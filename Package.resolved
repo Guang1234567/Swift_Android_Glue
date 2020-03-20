@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "AndroidSwiftLogcat",
+        "repositoryURL": "https://github.com/Guang1234567/swift-android-logcat.git",
+        "state": {
+          "branch": "master",
+          "revision": "49ee7e59cfbe3c3c5d469882395beecada4fe381",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
