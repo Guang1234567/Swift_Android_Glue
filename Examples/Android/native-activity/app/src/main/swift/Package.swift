@@ -66,6 +66,7 @@ let package = Package(
         .package(url: "https://github.com/Guang1234567/swift-android-logcat.git", .branch("master")),
         .package(url: "https://github.com/Guang1234567/swift-android-trace.git", .branch("master")),
         .package(url: "https://github.com/Guang1234567/swift-backtrace.git", .branch("master")),
+        .package(url: "https://github.com/Guang1234567/Swift_OpenGL.git", .branch("gles32_egl15_android")),
         .package(path: "../../../../../../.."),
     ],
     /*
@@ -109,6 +110,8 @@ let package = Package(
                     "AndroidSwiftLogcat",
                     "AndroidSwiftTrace",
                     "Backtrace",
+                    "SGLEGL",
+                    "SGLOpenGL",
                     "Swift_Android_Glue",
                 ],
                 swiftSettings: [
