@@ -28,7 +28,7 @@ func initEglEnv(hostActivity: MyNativeActivity) throws {
         throw DemoError.INIT_EGL_FAIlURE(reason: "Unable to eglGetDisplay")
     }
 
-    AndroidLogcat.i(MyNativeActivity.TAG, "eglDisplay = 0x\(String(eglDisplay, radix: 16))")
+    AndroidLogcat.i(MyNativeActivity.TAG, "eglDisplay = \(eglDisplay)")
 
     guard EGL_TRUE == eglInitialize(dpy: eglDisplay, major: nil, minor: nil) else {
         throw DemoError.INIT_EGL_FAIlURE(reason: "Unable to initialize EGLDisplay: Call `eglInitialize` fail")
@@ -104,7 +104,7 @@ func initEglEnv(hostActivity: MyNativeActivity) throws {
         throw DemoError.INIT_EGL_FAIlURE(reason: "Unable to eglCreateWindowSurface")
     }
 
-    AndroidLogcat.i(MyNativeActivity.TAG, "eglSurface = 0x\(String(eglSurface, radix: 16))")
+    AndroidLogcat.i(MyNativeActivity.TAG, "eglSurface = \(eglSurface)")
 
     var width: EGLint = 0
     guard EGL_TRUE == eglQuerySurface(dpy: eglDisplay, surface: eglSurface, attribute: EGL_WIDTH, value: &width) else {
@@ -132,7 +132,7 @@ func initEglEnv(hostActivity: MyNativeActivity) throws {
         throw DemoError.INIT_EGL_FAIlURE(reason: "Unable to eglCreateContext")
     }
 
-    AndroidLogcat.i(MyNativeActivity.TAG, "eglContext = 0x\(String(eglContext, radix: 16))")
+    AndroidLogcat.i(MyNativeActivity.TAG, "eglContext = \(eglContext)")
 
     // Bind eglDisplay + eglSurface + EGLContext
     // ----------------------------
