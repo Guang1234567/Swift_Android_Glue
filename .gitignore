@@ -11,3 +11,4 @@ build
 .swiftpm
 .idea
 .build
+local.properties

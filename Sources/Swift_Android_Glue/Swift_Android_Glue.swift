@@ -147,12 +147,12 @@ public class MotionEvent: InputEvent {
     }
 }
 
-public typealias EGLNativeWindowType = UnsafeMutableRawPointer?
+public typealias EGLNativeWindowType = UnsafeMutableRawPointer
 
 public class NativeApplication {
     var mApp: android_app
 
-    public var window: EGLNativeWindowType {
+    public var window: EGLNativeWindowType? {
         //AndroidLogcat.i(NativeActivity.TAG, "mApp.window = \(mApp.window)")
         return UnsafeMutableRawPointer(mApp.window)
     }
