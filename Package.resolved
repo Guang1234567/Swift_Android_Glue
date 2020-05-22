@@ -9,6 +9,15 @@
           "revision": "49ee7e59cfbe3c3c5d469882395beecada4fe381",
           "version": null
         }
+      },
+      {
+        "package": "Swift_Android_NativeWindow",
+        "repositoryURL": "https://github.com/Guang1234567/Swift_Android_NativeWindow.git",
+        "state": {
+          "branch": "master",
+          "revision": "8e1913d639669faa5837b0ca9d9b10dc32b9082b",
+          "version": null
+        }
       }
     ]
   },

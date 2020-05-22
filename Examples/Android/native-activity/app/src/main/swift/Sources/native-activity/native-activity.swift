@@ -3,6 +3,7 @@ import AndroidSwiftLogcat
 import SGLEGL
 import SGLOpenGL
 import Swift_Android_Glue
+import Swift_Android_NativeWindow
 import SkiaSwift
 
 public enum DemoError: Error {
@@ -53,12 +54,12 @@ public class SkEglSurface {
             skContext.flush()
         }
 
-        eglSwapBuffers(dpy: mEglDisplay, surface: mEglSurface);
+        let _ = eglSwapBuffers(dpy: mEglDisplay, surface: mEglSurface);
     }
 
-    public func onInitWindow(window: EGLNativeWindowType) {
+    public func onInitWindow(nativeWindow: AndroidNativeWindow) {
         do {
-            let skEglObjs: (EGLDisplay, EGLContext, EGLSurface, EGLint, EGLint, Context, Surface) = try initEglEnv(eglWindow: window)
+            let skEglObjs: (EGLDisplay, EGLContext, EGLSurface, EGLint, EGLint, Context, Surface) = try initEglEnv(nativeWindow: nativeWindow)
 
             mEglDisplay = skEglObjs.0
             mEglContext = skEglObjs.1
@@ -90,7 +91,7 @@ public class SkEglSurface {
         }
     }
 
-    func initEglEnv(eglWindow: EGLNativeWindowType) throws -> (EGLDisplay, EGLContext, EGLSurface, EGLint, EGLint, Context, Surface) {
+    func initEglEnv(nativeWindow: AndroidNativeWindow) throws -> (EGLDisplay, EGLContext, EGLSurface, EGLint, EGLint, Context, Surface) {
         //
         // ---------------------------
         let attribs: [EGLint] = [
@@ -112,7 +113,7 @@ public class SkEglSurface {
             throw DemoError.INIT_EGL_FAIlURE(reason: "Unable to eglGetDisplay")
         }
 
-        AndroidLogcat.i(SkEglSurface.TAG, "eglDisplay = \(eglDisplay)")
+        AndroidLogcat.i(SkEglSurface.TAG, "eglDisplay = \(String(describing: eglDisplay))")
 
         guard EGL_TRUE == eglInitialize(dpy: eglDisplay, major: nil, minor: nil) else {
             throw DemoError.INIT_EGL_FAIlURE(reason: "Unable to initialize EGLDisplay: Call `eglInitialize` fail")
@@ -171,9 +172,18 @@ public class SkEglSurface {
 
         //
         // ----------------------------
+        /* EGL_NATIVE_VISUAL_ID is an attribute of the EGLConfig that is
+           guaranteed to be accepted by ANativeWindow_setBuffersGeometry().
+           As soon as we picked a EGLConfig, we can safely reconfigure the
+           ANativeWindow buffers to match, using EGL_NATIVE_VISUAL_ID. */
         var format: EGLint = 0
         guard EGL_TRUE == eglGetConfigAttrib(dpy: eglDisplay, config: config!, attribute: EGL_NATIVE_VISUAL_ID, value: &format) else {
             throw DemoError.INIT_EGL_FAIlURE(reason: "Unable to initialize EGLConfig: Call `eglGetConfigAttrib` fail")
+        }
+
+        guard let legacyFormat = AndroidNativeWindow.LegacyFormat(rawValue: format),
+              nativeWindow.setBuffersGeometry(width: 0, height: 0, format: legacyFormat) >= 0 else {
+            throw DemoError.INIT_EGL_FAIlURE(reason: "Unable to initialize EGLConfig: Call `AndroidNativeWindow.setBuffersGeometry` fail")
         }
 
         // Create EGLSurface
@@ -185,17 +195,17 @@ public class SkEglSurface {
         let eglSurface: EGLSurface = eglCreateWindowSurface(
                 dpy: eglDisplay,
                 config: config!,
-                win: eglWindow,
+                win: nativeWindow.toC(),
                 attrib_list: surfaceAttribs)
 
         guard EGL_NO_SURFACE != eglSurface else {
             throw DemoError.INIT_EGL_FAIlURE(reason: "Unable to eglCreateWindowSurface")
         }
 
-        AndroidLogcat.i(SkEglSurface.TAG, "eglSurface = \(eglSurface)")
+        AndroidLogcat.i(SkEglSurface.TAG, "eglSurface = \(String(describing: eglSurface))")
 
         // eglSwapBuffers should not automatically clear the screen
-        eglSurfaceAttrib(eglDisplay, eglSurface, EGL_SWAP_BEHAVIOR, EGL_BUFFER_PRESERVED);
+        let _ = eglSurfaceAttrib(eglDisplay, eglSurface, EGL_SWAP_BEHAVIOR, EGL_BUFFER_PRESERVED);
 
         var width: EGLint = 0
         guard EGL_TRUE == eglQuerySurface(dpy: eglDisplay, surface: eglSurface, attribute: EGL_WIDTH, value: &width) else {
@@ -221,7 +231,7 @@ public class SkEglSurface {
             throw DemoError.INIT_EGL_FAIlURE(reason: "Unable to eglCreateContext")
         }
 
-        AndroidLogcat.i(SkEglSurface.TAG, "eglContext = \(eglContext)")
+        AndroidLogcat.i(SkEglSurface.TAG, "eglContext = \(String(describing: eglContext))")
 
         // Bind eglDisplay + eglSurface + EGLContext
         // ----------------------------
@@ -245,11 +255,11 @@ public class SkEglSurface {
         var sampleCount: GLint = 0
         glGetIntegerv(GL_SAMPLES, &sampleCount)
         var stencilBits: GLint = 0
-        glGetIntegerv(GL_STENCIL_BITS, &sampleCount)
+        glGetIntegerv(GL_STENCIL_BITS, &stencilBits)
         let renderTarget: RenderTarget = RenderTarget(width: width, height: height, sampleCount: sampleCount, stencilBits: stencilBits, glInfo: GlFramebufferInfo(fFBOID: UInt32(fbo), fFormat: UInt32(ColorType.rgba8888.toGlSizedFormat())))
         let gpuSurface = Surface.gpu(grContext, renderTarget)
 
-        AndroidLogcat.w(SkEglSurface.TAG, "initEglEnved numConfig = \(numConfig), eglWindow = \(eglWindow)")
+        AndroidLogcat.w(SkEglSurface.TAG, "initEglEnved numConfig = \(numConfig), nativeWindow = \(nativeWindow)")
 
         return (eglDisplay, eglContext, eglSurface, width, height, grContext, gpuSurface)
     }
@@ -393,7 +403,7 @@ class EglNativeActivity: NativeActivity {
     override func onAppCmdInitWindow(_ app: NativeApplication) {
         AndroidLogcat.w(EglNativeActivity.TAG, "onAppCmdInitWindow")
         if let window = app.window {
-            mSkEglSurface.onInitWindow(window: window)
+            mSkEglSurface.onInitWindow(nativeWindow: window)
         }
     }
 

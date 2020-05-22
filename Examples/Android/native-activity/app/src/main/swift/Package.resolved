@@ -38,6 +38,15 @@
         }
       },
       {
+        "package": "SkiaSwift",
+        "repositoryURL": "https://github.com/Guang1234567/Skia_Swift_CrossPlatform.git",
+        "state": {
+          "branch": "android_api_21",
+          "revision": "1d5d89601a622bf38c2ac459ff39d4005d466989",
+          "version": null
+        }
+      },
+      {
         "package": "AndroidSwiftLogcat",
         "repositoryURL": "https://github.com/Guang1234567/swift-android-logcat.git",
         "state": {
@@ -92,29 +101,20 @@
         }
       },
       {
-        "package": "Swift_FP",
-        "repositoryURL": "https://github.com/Guang1234567/Swift_FP.git",
+        "package": "Swift_Android_NativeWindow",
+        "repositoryURL": "https://github.com/Guang1234567/Swift_Android_NativeWindow.git",
         "state": {
           "branch": "master",
-          "revision": "0e973f97d3efb1b201da7e2cde35a6edbe55c584",
+          "revision": "8e1913d639669faa5837b0ca9d9b10dc32b9082b",
           "version": null
         }
       },
       {
-        "package": "LogTime",
-        "repositoryURL": "https://github.com/Guang1234567/Swift_LogTime.git",
+        "package": "SGLOpenGL",
+        "repositoryURL": "https://github.com/Guang1234567/Swift_OpenGL.git",
         "state": {
-          "branch": "master",
-          "revision": "adb447e1cdaa7575181ed328ea5af105b34b92a7",
-          "version": null
-        }
-      },
-      {
-        "package": "Assimp",
-        "repositoryURL": "https://github.com/Guang1234567/SwiftAssimp.git",
-        "state": {
-          "branch": "master",
-          "revision": "d96ebdfb054ae352bfe246627b59b7879b405026",
+          "branch": "gles32_egl15_android",
+          "revision": "da5310f9466cb08e7b7179913a03d9737eb8ec16",
           "version": null
         }
       }

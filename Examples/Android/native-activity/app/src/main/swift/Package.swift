@@ -66,6 +66,7 @@ let package = Package(
         .package(url: "https://github.com/Guang1234567/swift-android-logcat.git", .branch("master")),
         .package(url: "https://github.com/Guang1234567/swift-android-trace.git", .branch("master")),
         .package(url: "https://github.com/Guang1234567/swift-backtrace.git", .branch("master")),
+        .package(url: "https://github.com/Guang1234567/Swift_Android_NativeWindow.git", .branch("master")),
         .package(url: "https://github.com/Guang1234567/Swift_OpenGL.git", .branch("gles32_egl15_android")),
         .package(url: "https://github.com/Guang1234567/Skia_Swift_CrossPlatform.git", .branch("android_api_21")),
         .package(path: "../../../../../../.."),
@@ -114,6 +115,7 @@ let package = Package(
                     "SGLEGL",
                     "SGLOpenGL",
                     "SkiaSwift",
+                    "Swift_Android_NativeWindow",
                     "Swift_Android_Glue",
                 ],
                 swiftSettings: [

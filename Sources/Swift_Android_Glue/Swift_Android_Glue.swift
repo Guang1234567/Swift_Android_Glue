@@ -1,4 +1,5 @@
 import AndroidSwiftLogcat
+import Swift_Android_NativeWindow
 import C_Android_Glue
 import Foundation
 
@@ -147,14 +148,12 @@ public class MotionEvent: InputEvent {
     }
 }
 
-public typealias EGLNativeWindowType = UnsafeMutableRawPointer
-
 public class NativeApplication {
     var mApp: android_app
 
-    public var window: EGLNativeWindowType? {
+    public var window: AndroidNativeWindow? {
         //AndroidLogcat.i(NativeActivity.TAG, "mApp.window = \(mApp.window)")
-        return UnsafeMutableRawPointer(mApp.window)
+        return AndroidNativeWindow.fromWindowPtr(mApp.window)
     }
 
     init(_ app: android_app) {
@@ -275,67 +274,67 @@ func c_engine_handle_cmd(_ pApp: UnsafeMutablePointer<android_app>?, _ cmd: Int3
         nativeApp.mApp = app
 
         switch Int(cmd) {
-        case APP_CMD_START:
-            engine.onAppCmdStart(nativeApp)
+            case APP_CMD_START:
+                engine.onAppCmdStart(nativeApp)
 
-        case APP_CMD_RESUME:
-            engine.onAppCmdResume(nativeApp)
+            case APP_CMD_RESUME:
+                engine.onAppCmdResume(nativeApp)
 
-        case APP_CMD_INIT_WINDOW:
-            if app.window != nil {
-                engine.onAppCmdInitWindow(nativeApp)
-            }
+            case APP_CMD_INIT_WINDOW:
+                if app.window != nil {
+                    engine.onAppCmdInitWindow(nativeApp)
+                }
 
-        case APP_CMD_GAINED_FOCUS:
-            engine.onAppCmdGainedFocus(nativeApp)
+            case APP_CMD_GAINED_FOCUS:
+                engine.onAppCmdGainedFocus(nativeApp)
 
-        case APP_CMD_WINDOW_RESIZED:
-            engine.onAppCmdWindowResized(nativeApp)
+            case APP_CMD_WINDOW_RESIZED:
+                engine.onAppCmdWindowResized(nativeApp)
 
-        case APP_CMD_CONFIG_CHANGED:
-            engine.onAppCmdConfigChanged(nativeApp)
+            case APP_CMD_CONFIG_CHANGED:
+                engine.onAppCmdConfigChanged(nativeApp)
 
-        case APP_CMD_PAUSE:
-            engine.onAppCmdPause(nativeApp)
+            case APP_CMD_PAUSE:
+                engine.onAppCmdPause(nativeApp)
 
                 // activated state
                 // -------------------------------------
 
-        case APP_CMD_LOST_FOCUS:
-            engine.onAppCmdLostFocus(nativeApp)
+            case APP_CMD_LOST_FOCUS:
+                engine.onAppCmdLostFocus(nativeApp)
 
-        case APP_CMD_TERM_WINDOW:
-            engine.onAppCmdTermWindow(nativeApp)
+            case APP_CMD_TERM_WINDOW:
+                engine.onAppCmdTermWindow(nativeApp)
 
-        case APP_CMD_STOP:
-            engine.onAppCmdStop(nativeApp)
+            case APP_CMD_STOP:
+                engine.onAppCmdStop(nativeApp)
 
-        case APP_CMD_SAVE_STATE:
-            engine.mSavedState.mData = engine.onAppCmdSaveState(nativeApp)
+            case APP_CMD_SAVE_STATE:
+                engine.mSavedState.mData = engine.onAppCmdSaveState(nativeApp)
 
-            // The system has asked us to save our current state.  Do so.
-            let pSavedState: UnsafeMutablePointer<SavedState> = UnsafeMutablePointer<SavedState>.allocate(capacity: 1)
-            pSavedState.initialize(to: engine.mSavedState)
+                // The system has asked us to save our current state.  Do so.
+                let pSavedState: UnsafeMutablePointer<SavedState> = UnsafeMutablePointer<SavedState>.allocate(capacity: 1)
+                pSavedState.initialize(to: engine.mSavedState)
 
-            app.savedState = UnsafeMutableRawPointer(pSavedState)
-            app.savedStateSize = MemoryLayout.size(ofValue: engine.mSavedState)
-        case APP_CMD_DESTROY:
-            engine.onAppCmdDestroy(nativeApp)
+                app.savedState = UnsafeMutableRawPointer(pSavedState)
+                app.savedStateSize = MemoryLayout.size(ofValue: engine.mSavedState)
+            case APP_CMD_DESTROY:
+                engine.onAppCmdDestroy(nativeApp)
 
                 //
                 // --------------------------------------
 
-        case APP_CMD_LOW_MEMORY:
-            engine.onAppCmdLowMemory(nativeApp)
+            case APP_CMD_LOW_MEMORY:
+                engine.onAppCmdLowMemory(nativeApp)
 
-        case APP_CMD_WINDOW_REDRAW_NEEDED:
-            engine.onAppCmdWindowRedrawNeeded(nativeApp)
+            case APP_CMD_WINDOW_REDRAW_NEEDED:
+                engine.onAppCmdWindowRedrawNeeded(nativeApp)
 
-        case APP_CMD_CONTENT_RECT_CHANGED:
-            engine.onAppCmdContentRectChanged(nativeApp)
+            case APP_CMD_CONTENT_RECT_CHANGED:
+                engine.onAppCmdContentRectChanged(nativeApp)
 
-        default:
-            break
+            default:
+                break
         }
     }
 }
@@ -364,10 +363,10 @@ func c_engine_handle_input(_ pApp: UnsafeMutablePointer<android_app>?, _ pEvent:
             let pointerId: Int32 = AMotionEvent_getPointerId(pEvent, pointerIndex)
 
             return engine.onMotionEvent(nativeApp, MotionEvent(x, y,
-                    pointerId,
-                    pointerIndex,
-                    MotionEvent.Action(rawValue: actionIdx)!,
-                    flags, edgeFlags))
+                                                               pointerId,
+                                                               pointerIndex,
+                                                               MotionEvent.Action(rawValue: actionIdx)!,
+                                                               flags, edgeFlags))
         } else if AInputEvent_getType(pEvent) == AINPUT_EVENT_TYPE_KEY {
             let keycode: Int32 = AKeyEvent_getKeyCode(pEvent)
             let action: Int32 = AKeyEvent_getAction(pEvent)
